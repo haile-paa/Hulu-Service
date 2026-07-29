@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Hulu Service",
+    "slug": "hulu-service",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "icon": "./assets/icon.png",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlistNSLocationWhenInUseUsageDescription": "ደንበኞች አካባቢዎን በማወቅ አቅራቢያ ያሉ ባለሙያዎችን እንዲያገኙ ያስፈልጋል።"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B3D50"
+      },
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "ደንበኞች አካባቢዎን በማወቅ አቅራቢያ ያሉ ባለሙያዎችን እንዲያገኙ ያስፈልጋል።"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B3D50"
+        }
+      ]
+    ]
+  }
+}
