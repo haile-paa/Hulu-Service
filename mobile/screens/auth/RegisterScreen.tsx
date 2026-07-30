@@ -13,9 +13,11 @@ import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import Dropdown from "../../components/Dropdown";
 import { api } from "../../api/client";
+import { formatCategoryPrice, PriceType } from "../../utils/pricing";
 
 type Role = "customer" | "provider";
 
@@ -24,6 +26,8 @@ interface Category {
   nameEn: string;
   nameAm: string;
   icon: string;
+  priceType?: PriceType;
+  price?: number;
 }
 
 // Experience buckets shown in the dropdown; value is the number of years
@@ -39,6 +43,7 @@ const EXPERIENCE_OPTIONS = [
 export default function RegisterScreen({ navigation }: any) {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const { language } = useLanguage();
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -264,6 +269,38 @@ export default function RegisterScreen({ navigation }: any) {
                 multi
               />
 
+              {!!selectedCategoryIds.length && (
+                <View style={styles.pricePreviewWrap}>
+                  {categories
+                    .filter((cat) => selectedCategoryIds.includes(cat.id))
+                    .map((cat) => (
+                      <View
+                        key={cat.id}
+                        style={[
+                          styles.pricePreviewRow,
+                          { borderColor: colors.border },
+                        ]}
+                      >
+                        <Text
+                          style={{ color: colors.textSecondary, fontSize: 13 }}
+                          numberOfLines={1}
+                        >
+                          {language === "am" ? cat.nameAm : cat.nameEn}
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.accent,
+                            fontSize: 13,
+                            fontWeight: "700",
+                          }}
+                        >
+                          {formatCategoryPrice(cat, t, language)}
+                        </Text>
+                      </View>
+                    ))}
+                </View>
+              )}
+
               <Dropdown
                 label={t("auth.experience")}
                 placeholder={t("auth.selectExperience")}
@@ -424,6 +461,17 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 10,
     marginBottom: 8,
+  },
+  pricePreviewWrap: {
+    marginBottom: 14,
+    marginTop: -4,
+  },
+  pricePreviewRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    paddingVertical: 8,
   },
   chip: {
     borderWidth: 1.5,

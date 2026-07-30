@@ -9,9 +9,15 @@ import (
 	"hulu-service-backend/models"
 
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Run with: go run cmd/seed/main.go
+//
+// Upserts by name_en so this is safe to re-run any time (e.g. after adding
+// or changing category prices) without creating duplicates or requiring a
+// fresh database.
 func main() {
 	_ = godotenv.Load()
 	config.ConnectDB()
@@ -21,20 +27,23 @@ func main() {
 
 	col := config.DB.Collection("categories")
 
-	count, _ := col.CountDocuments(ctx, map[string]interface{}{})
-	if count > 0 {
-		log.Println("categories already seeded, skipping")
-		return
-	}
-
-	docs := make([]interface{}, 0)
+	updated := 0
 	for _, cat := range models.SeedCategories() {
-		docs = append(docs, cat)
+		_, err := col.UpdateOne(ctx,
+			bson.M{"name_en": cat.NameEn},
+			bson.M{"$set": bson.M{
+				"name_am":    cat.NameAm,
+				"icon":       cat.Icon,
+				"sort_order": cat.SortOrder,
+				"price_type": cat.PriceType,
+				"price":      cat.Price,
+			}},
+			options.Update().SetUpsert(true),
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		updated++
 	}
-
-	res, err := col.InsertMany(ctx, docs)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("seeded %d categories\n", len(res.InsertedIDs))
+	log.Printf("seeded/updated %d categories\n", updated)
 }

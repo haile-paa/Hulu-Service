@@ -22,12 +22,15 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import { api } from "../../api/client";
 import { matchWorkArea } from "../../utils/areamap";
+import { formatCategoryPrice, PriceType } from "../../utils/pricing";
 
 interface Category {
   id: string;
   nameEn: string;
   nameAm: string;
   icon: string;
+  priceType?: PriceType;
+  price?: number;
 }
 
 interface Provider {
@@ -407,6 +410,23 @@ export default function CustomerHomeScreen({ navigation }: any) {
                             {item.ratingCount || 0})
                           </Text>
                         </View>
+                        {!!item.categories?.length && (
+                          <Text
+                            style={{
+                              color: colors.accent,
+                              fontSize: 10.5,
+                              fontWeight: "600",
+                              marginTop: 2,
+                            }}
+                            numberOfLines={1}
+                          >
+                            {formatCategoryPrice(
+                              item.categories[0],
+                              t,
+                              language,
+                            )}
+                          </Text>
+                        )}
                       </View>
                     </View>
                     <View style={styles.cardActionsRow}>

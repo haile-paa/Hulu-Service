@@ -14,11 +14,14 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import SettingsRow from "../../components/SettingsRow";
 import { api } from "../../api/client";
+import { formatCategoryPrice, PriceType } from "../../utils/pricing";
 
 interface Category {
   id: string;
   nameEn: string;
   nameAm: string;
+  priceType?: PriceType;
+  price?: number;
 }
 
 interface Me {
@@ -219,6 +222,16 @@ export default function ProviderProfileScreen({ navigation }: any) {
                     }}
                   >
                     {c.nameAm}
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.accent,
+                      fontSize: 11,
+                      fontWeight: "600",
+                      marginTop: 2,
+                    }}
+                  >
+                    {formatCategoryPrice(c, t, language)}
                   </Text>
                 </View>
               ))}

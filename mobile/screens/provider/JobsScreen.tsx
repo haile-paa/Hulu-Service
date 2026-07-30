@@ -12,9 +12,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import EmptyState from "../../components/EmptyState";
 import { api } from "../../api/client";
+import { formatCategoryPrice, PriceType } from "../../utils/pricing";
 
 interface Party {
   id: string;
@@ -28,7 +30,13 @@ interface Booking {
   description?: string;
   address?: string;
   customer?: Party;
-  category?: { nameEn: string; nameAm: string };
+  category?: {
+    nameEn: string;
+    nameAm: string;
+    priceType?: PriceType;
+    price?: number;
+  };
+  priceQuote?: number;
   createdAt: string;
 }
 
@@ -44,6 +52,7 @@ const STATUS_META: Record<string, { color: string; labelKey: string }> = {
 export default function JobsScreen({ navigation }: any) {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const { language } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -163,6 +172,40 @@ export default function JobsScreen({ navigation }: any) {
                 >
                   {categoryName}
                 </Text>
+              )}
+              {!!item.category && (
+                <View style={styles.priceRow}>
+                  <Ionicons
+                    name='pricetag-outline'
+                    size={12}
+                    color={
+                      item.category.priceType === "negotiable"
+                        ? colors.textSecondary
+                        : colors.accent
+                    }
+                  />
+                  <Text
+                    style={{
+                      color:
+                        item.category.priceType === "negotiable"
+                          ? colors.textSecondary
+                          : colors.accent,
+                      fontSize: 12,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {item.priceQuote
+                      ? formatCategoryPrice(
+                          {
+                            priceType: item.category.priceType,
+                            price: item.priceQuote,
+                          },
+                          t,
+                          language,
+                        )
+                      : formatCategoryPrice(item.category, t, language)}
+                  </Text>
+                </View>
               )}
               {!!item.description && (
                 <Text
@@ -292,6 +335,12 @@ const styles = StyleSheet.create({
   },
   name: { fontSize: 15, fontWeight: "600", flex: 1, marginRight: 8 },
   statusPill: { borderRadius: 10, paddingHorizontal: 9, paddingVertical: 4 },
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginTop: 6,
+  },
   metaRow: {
     flexDirection: "row",
     alignItems: "center",

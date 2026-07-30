@@ -134,6 +134,13 @@
     "solarInstaller": "ሶላር ገጣሚ",
     "cctvInstaller": "ሲሲቲቪ ገጣሚ"
   },
+  "pricing": {
+    "birr": "ብር",
+    "oneTime": "(አንድ ጊዜ)",
+    "perMonth": "ወር",
+    "negotiable": "በድርድር",
+    "priceLabel": "ዋጋ"
+  },
   "profile": {
     "language": "ቋንቋ",
     "appearance": "ገጽታ",

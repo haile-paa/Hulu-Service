@@ -16,15 +16,19 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import EmptyState from "../../components/EmptyState";
 import { api } from "../../api/client";
+import { formatCategoryPrice, PriceType } from "../../utils/pricing";
 
 interface Category {
   id: string;
   nameEn: string;
   nameAm: string;
   icon: string;
+  priceType?: PriceType;
+  price?: number;
 }
 
 interface Provider {
@@ -42,6 +46,7 @@ interface Provider {
 export default function ProviderListScreen({ route, navigation }: any) {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const { language } = useLanguage();
   const categoryId = route?.params?.categoryId;
   const area = route?.params?.area;
   const initialSearch = route?.params?.search || "";
@@ -290,6 +295,51 @@ export default function ProviderListScreen({ route, navigation }: any) {
                 </View>
               )}
 
+              {!!item.categories?.length && (
+                <View style={styles.priceRow}>
+                  {item.categories.map((cat) => (
+                    <View
+                      key={cat.id}
+                      style={[
+                        styles.priceChip,
+                        {
+                          backgroundColor:
+                            cat.priceType === "negotiable"
+                              ? colors.surfaceRaised
+                              : colors.accentDim,
+                          borderColor:
+                            cat.priceType === "negotiable"
+                              ? colors.border
+                              : colors.accent + "40",
+                        },
+                      ]}
+                    >
+                      <Ionicons
+                        name='pricetag-outline'
+                        size={11}
+                        color={
+                          cat.priceType === "negotiable"
+                            ? colors.textSecondary
+                            : colors.accent
+                        }
+                      />
+                      <Text
+                        style={{
+                          color:
+                            cat.priceType === "negotiable"
+                              ? colors.textSecondary
+                              : colors.accent,
+                          fontSize: 11.5,
+                          fontWeight: "600",
+                        }}
+                      >
+                        {formatCategoryPrice(cat, t, language)}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
               {!!item.workAreas?.length && (
                 <View style={styles.areaRow}>
                   {item.workAreas.map((area) => (
@@ -490,6 +540,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   metaItem: { flexDirection: "row", alignItems: "center", gap: 5 },
+  priceRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 10 },
+  priceChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+  },
   areaRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 10 },
   areaChip: { borderRadius: 8, paddingHorizontal: 9, paddingVertical: 4 },
   actionsRow: {

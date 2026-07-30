@@ -98,6 +98,17 @@ func CreateBooking(c *gin.Context) {
 	if input.CategoryID != "" {
 		if catID, err := primitive.ObjectIDFromHex(input.CategoryID); err == nil {
 			booking.CategoryID = catID
+
+			// The price is set by the app per category, not by the customer
+			// or provider, so it's looked up here rather than trusted from
+			// client input. Negotiable categories are left at 0 — the price
+			// is worked out directly between customer and provider.
+			var category models.Category
+			if err := config.DB.Collection("categories").FindOne(ctx, bson.M{"_id": catID}).Decode(&category); err == nil {
+				if category.PriceType != models.PriceNegotiable {
+					booking.PriceQuote = category.Price
+				}
+			}
 		}
 	}
 

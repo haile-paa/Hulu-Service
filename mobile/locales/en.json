@@ -134,6 +134,13 @@
     "solarInstaller": "Solar panel installer",
     "cctvInstaller": "CCTV installer"
   },
+  "pricing": {
+    "birr": "Birr",
+    "oneTime": "(one time)",
+    "perMonth": "month",
+    "negotiable": "Negotiable",
+    "priceLabel": "Price"
+  },
   "profile": {
     "language": "Language",
     "appearance": "Appearance",

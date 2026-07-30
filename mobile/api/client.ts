@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Point this at your deployed Go backend (e.g. Render URL), same pattern as Yova.
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL || "http://192.168.1.3:8080/api";
+  process.env.EXPO_PUBLIC_API_URL || "http://192.168.1.4:8080/api";
 
 export const api = axios.create({
   baseURL: BASE_URL,
