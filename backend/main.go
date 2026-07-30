@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"hulu-service-backend/config"
 	"hulu-service-backend/routes"
@@ -20,7 +21,18 @@ func main() {
 	config.ConnectDB()
 
 	r := gin.Default()
-	r.Use(cors.Default())
+
+	// cors.Default() only allows a small default header set that does NOT
+	// include "Authorization" — fine for the mobile app (not subject to
+	// browser CORS preflight), but it silently blocks every authenticated
+	// request from the admin site, since the browser preflights any request
+	// carrying a Bearer token. Configure it explicitly instead.
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	corsConfig.MaxAge = 12 * time.Hour
+	r.Use(cors.New(corsConfig))
 
 	routes.RegisterRoutes(r)
 

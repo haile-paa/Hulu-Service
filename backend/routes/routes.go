@@ -48,4 +48,23 @@ func RegisterRoutes(r *gin.Engine) {
 		provider.PATCH("/bookings/:id/respond", handlers.RespondToBooking)
 		provider.PATCH("/bookings/:id/complete", handlers.CompleteBooking)
 	}
+
+	// Admin-only
+	admin := api.Group("/admin")
+	admin.Use(middleware.RequireAuth(), middleware.RequireRole("admin"))
+	{
+		admin.GET("/stats", handlers.GetAdminStats)
+
+		admin.GET("/bookings", handlers.ListAllBookings)
+
+		admin.GET("/providers", handlers.ListAllProviders)
+		admin.PATCH("/providers/:id/verify", handlers.VerifyProvider)
+
+		admin.GET("/users", handlers.ListAllUsers)
+		admin.PATCH("/users/:id/suspend", handlers.SuspendUser)
+
+		admin.POST("/categories", handlers.CreateCategory)
+		admin.PATCH("/categories/:id", handlers.UpdateCategory)
+		admin.DELETE("/categories/:id", handlers.DeleteCategory)
+	}
 }

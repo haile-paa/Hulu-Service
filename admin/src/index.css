@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core palette: deep indigo/slate base with a violet-to-cyan accent
+     gradient. Chosen to feel "premium dashboard" rather than default
+     Tailwind blue-on-white. */
+  --color-base-950: #05060f;
+  --color-base-900: #0a0c1b;
+  --color-base-850: #101226;
+  --color-base-800: #14172d;
+  --color-base-700: #1c2038;
+  --color-base-600: #2a2f4d;
+  --color-base-500: #3d4468;
+  --color-base-400: #6b7299;
+  --color-base-300: #9aa0c4;
+  --color-base-200: #c4c8e2;
+  --color-base-100: #e6e8f5;
+
+  --color-accent-violet: #8b5cf6;
+  --color-accent-fuchsia: #d946ef;
+  --color-accent-cyan: #22d3ee;
+  --color-accent-emerald: #34d399;
+  --color-accent-amber: #fbbf24;
+  --color-accent-rose: #fb7185;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow: glow 3s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+  @keyframes glow {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-base-950);
+  color: var(--color-base-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin, unobtrusive scrollbars that match the dark theme. */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-base-600);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-base-500);
+}
+
+/* Reusable glass-panel look used across cards, sidebars, and modals. */
+.glass-panel {
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.text-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-violet),
+    var(--color-accent-fuchsia),
+    var(--color-accent-cyan)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
+  background-size: 200% 100%;
+}

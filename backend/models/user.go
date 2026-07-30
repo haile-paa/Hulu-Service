@@ -39,11 +39,15 @@ type User struct {
 	IsAvailable      bool                 `bson:"is_available" json:"isAvailable"`
 	Location         *GeoPoint            `bson:"location,omitempty" json:"location,omitempty"`
 
+	// IsSuspended is set by an admin to block login without deleting the
+	// account. Applies to any role (customer or provider).
+	IsSuspended bool `bson:"is_suspended,omitempty" json:"isSuspended,omitempty"`
+
 	CreatedAt time.Time `bson:"created_at" json:"createdAt"`
 	UpdatedAt time.Time `bson:"updated_at" json:"updatedAt"`
 }
 
 type GeoPoint struct {
-	Type        string    `bson:"type" json:"type"` // "Point"
+	Type        string    `bson:"type" json:"type"`               // "Point"
 	Coordinates []float64 `bson:"coordinates" json:"coordinates"` // [lng, lat]
 }

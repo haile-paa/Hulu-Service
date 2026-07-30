@@ -16,12 +16,12 @@ import (
 )
 
 type RegisterInput struct {
-	FullName    string   `json:"fullName" binding:"required"`
-	Phone       string   `json:"phone" binding:"required"`
-	Password    string   `json:"password" binding:"required,min=6"`
-	Role        string   `json:"role" binding:"required,oneof=customer provider"`
-	City        string   `json:"city" binding:"required"`
-	Language    string   `json:"language"`
+	FullName        string   `json:"fullName" binding:"required"`
+	Phone           string   `json:"phone" binding:"required"`
+	Password        string   `json:"password" binding:"required,min=6"`
+	Role            string   `json:"role" binding:"required,oneof=customer provider"`
+	City            string   `json:"city" binding:"required"`
+	Language        string   `json:"language"`
 	CategoryIDs     []string `json:"categoryIds"`     // required if role == provider
 	WorkAreas       []string `json:"workAreas"`       // required if role == provider, e.g. ["ቦሌ", "ፒያሳ"]
 	YearsExperience int      `json:"yearsExperience"` // required if role == provider
@@ -119,6 +119,11 @@ func Login(c *gin.Context) {
 
 	if bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(input.Password)) != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid phone or password"})
+		return
+	}
+
+	if user.IsSuspended {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this account has been suspended"})
 		return
 	}
 
