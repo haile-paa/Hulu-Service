@@ -1,0 +1,91 @@
+/*
+  Design notes:
+  - Telegram injects its own theme colors (light/dark, user-chosen accent) via
+    window.Telegram.WebApp.themeParams — telegram.ts writes those onto these
+    same CSS variables at runtime, so the app inherits the host theme rather
+    than fighting it. The values below are just the fallback for local dev
+    (outside Telegram) and the dark theme, since that's what the target
+    audience's Telegram is set to in practice.
+  - Signature color is a marigold/amber (#E8A33D) — a nod to the Adey Abeba
+    (Meskel daisy), Ethiopia's New Year flower. Used sparingly: primary
+    actions, the brand mark, and status accents. Everything else stays quiet.
+  - One font stack, not a display/body pair — Amharic text needs Ethiopic
+    glyph coverage, which most imported display webfonts don't have, so
+    mixing families would silently break for half the UI's content. Weight
+    and size carry hierarchy instead.
+*/
+
+:root {
+  --bg: #10161d;
+  --bg-elevated: #1a232d;
+  --bg-elevated-2: #212c38;
+  --text: #eef2f5;
+  --text-muted: #93a3b1;
+  --border: rgba(255, 255, 255, 0.08);
+
+  --accent: #e8a33d;
+  --accent-ink: #241a06;
+  --accent-soft: rgba(232, 163, 61, 0.14);
+
+  --success: #4caf7d;
+  --success-soft: rgba(76, 175, 125, 0.14);
+  --danger: #e0616b;
+  --danger-soft: rgba(224, 97, 107, 0.14);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Ethiopic",
+    "Noto Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--accent);
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* visible keyboard focus, not just mouse hover */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
