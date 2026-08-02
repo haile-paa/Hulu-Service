@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as api from "../lib/api";
 import { TopBar, EmptyState } from "../components/ui";
+import { CategoryIcon } from "../components/CategoryIcon";
 
 export function HomePage() {
   const [categories, setCategories] = useState<api.Category[] | null>(null);
@@ -13,17 +14,25 @@ export function HomePage() {
 
   return (
     <div>
-      <TopBar title="Hulu Service" />
+      <TopBar title='Hulu Service' />
       <div style={{ padding: "8px 20px 4px" }}>
-        <p style={{ color: "var(--text-muted)", fontSize: 14, margin: "0 0 16px" }}>
+        <p
+          style={{
+            color: "var(--text-muted)",
+            fontSize: 14,
+            margin: "0 0 16px",
+          }}
+        >
           ምን አገልግሎት ይፈልጋሉ?
         </p>
       </div>
 
       {categories === null && (
-        <div style={{ padding: 20, color: "var(--text-muted)" }}>በመጫን ላይ...</div>
+        <div style={{ padding: 20, color: "var(--text-muted)" }}>
+          በመጫን ላይ...
+        </div>
       )}
-      {categories?.length === 0 && <EmptyState title="ምድቦች የሉም" />}
+      {categories?.length === 0 && <EmptyState title='ምድቦች የሉም' />}
 
       <div
         style={{
@@ -34,26 +43,68 @@ export function HomePage() {
         }}
       >
         {categories?.map((c) => (
-          <button
+          <CategoryCard
             key={c.id}
-            onClick={() => navigate(`/providers/${c.id}`, { state: { categoryName: c.nameAm } })}
-            style={{
-              background: "var(--bg-elevated)",
-              border: "1px solid var(--border)",
-              borderRadius: "var(--radius-md)",
-              padding: "18px 14px",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              gap: 10,
-              color: "var(--text)",
-            }}
-          >
-            <span style={{ fontSize: 26 }}>{c.icon || "🛠"}</span>
-            <span style={{ fontSize: 14, fontWeight: 700 }}>{c.nameAm}</span>
-          </button>
+            category={c}
+            onClick={() =>
+              navigate(`/providers/${c.id}`, {
+                state: { categoryName: c.nameAm },
+              })
+            }
+          />
         ))}
       </div>
     </div>
+  );
+}
+
+function CategoryCard({
+  category,
+  onClick,
+}: {
+  category: api.Category;
+  onClick: () => void;
+}) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      style={{
+        background: "var(--bg-elevated)",
+        border: "1px solid var(--border)",
+        borderRadius: "var(--radius-md)",
+        padding: "18px 16px",
+        textAlign: "left",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        color: "var(--text)",
+        transform: pressed ? "scale(0.97)" : "scale(1)",
+        transition: "transform 0.08s ease",
+      }}
+    >
+      <span
+        style={{
+          width: 42,
+          height: 42,
+          borderRadius: 12,
+          background: "var(--accent-soft)",
+          color: "var(--accent)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CategoryIcon name={category.icon} size={22} />
+      </span>
+      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.3 }}>
+        {category.nameAm}
+      </span>
+    </button>
   );
 }
