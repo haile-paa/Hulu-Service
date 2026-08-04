@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 import { useAuth } from "./lib/auth";
+import { useTelegramBackButton } from "./lib/telegram";
 import { BottomNav } from "./components/BottomNav";
 import { LoginPage } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
@@ -29,6 +30,10 @@ function Layout({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
+  // Shows/hides Telegram's native header back-arrow based on the current
+  // route — must run inside the Router, so it lives here rather than main.tsx.
+  useTelegramBackButton();
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />

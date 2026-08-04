@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import * as api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { TopBar, Card, StatusBadge, Button, EmptyState } from "../components/ui";
+import { useT } from "../lib/i18n";
 
 export function ProviderDashboardPage() {
   const { token } = useAuth();
   const [bookings, setBookings] = useState<api.Booking[] | null>(null);
   const [available, setAvailable] = useState<boolean | null>(null);
   const navigate = useNavigate();
+  const t = useT();
 
   async function load() {
     if (!token) return;
@@ -42,7 +44,7 @@ export function ProviderDashboardPage() {
   return (
     <div>
       <TopBar
-        title="የስራ ጥያቄዎች"
+        title={t("jobRequests")}
         right={
           <button
             onClick={toggleAvailability}
@@ -64,16 +66,16 @@ export function ProviderDashboardPage() {
                 width: 7,
                 height: 7,
                 borderRadius: 999,
-                background: available ? "var(--success)" : "var(--text-muted)",
+                background: available ? "var(--teal)" : "var(--text-muted)",
               }}
             />
-            {available ? "አገኛለሁ" : "አልገኝም"}
+            {available ? t("available") : t("unavailable")}
           </button>
         }
       />
 
-      {bookings === null && <div style={{ padding: 20, color: "var(--text-muted)" }}>በመጫን ላይ...</div>}
-      {bookings?.length === 0 && <EmptyState title="እስካሁን የስራ ጥያቄ የለም" />}
+      {bookings === null && <div style={{ padding: 20, color: "var(--text-muted)" }}>{t("loading")}</div>}
+      {bookings?.length === 0 && <EmptyState title={t("noJobsYet")} />}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "4px 20px 24px" }}>
         {bookings?.map((b) => (
@@ -97,19 +99,19 @@ export function ProviderDashboardPage() {
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               {b.status === "pending" && (
                 <>
-                  <Button onClick={() => respond(b.id, "accept")}>✅ ተቀበል</Button>
+                  <Button onClick={() => respond(b.id, "accept")}>{t("accept")}</Button>
                   <Button variant="danger" onClick={() => respond(b.id, "decline")}>
-                    አትቀበል
+                    {t("decline")}
                   </Button>
                 </>
               )}
               {["accepted", "in_progress"].includes(b.status) && (
                 <>
                   <Button variant="secondary" onClick={() => navigate(`/chat/${b.id}`)}>
-                    💬 ውይይት
+                    {t("chat")}
                   </Button>
                   <Button variant="secondary" onClick={() => complete(b.id)}>
-                    🏁 ጨርሻለሁ
+                    {t("markComplete")}
                   </Button>
                 </>
               )}

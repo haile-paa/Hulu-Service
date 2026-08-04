@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import * as api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { TopBar, Card, StatusBadge, Button, EmptyState } from "../components/ui";
+import { useT } from "../lib/i18n";
 
 export function MyBookingsPage() {
   const { token } = useAuth();
   const [bookings, setBookings] = useState<api.Booking[] | null>(null);
   const navigate = useNavigate();
+  const t = useT();
 
   async function load() {
     if (!token) return;
@@ -27,12 +29,10 @@ export function MyBookingsPage() {
 
   return (
     <div>
-      <TopBar title="የእኔ ማስያዣዎች" />
+      <TopBar title={t("myBookings")} />
 
-      {bookings === null && <div style={{ padding: 20, color: "var(--text-muted)" }}>በመጫን ላይ...</div>}
-      {bookings?.length === 0 && (
-        <EmptyState title="እስካሁን ምንም ማስያዣ የለዎትም" hint="ከቤት ገጽ ምድብ ይምረጡ" />
-      )}
+      {bookings === null && <div style={{ padding: 20, color: "var(--text-muted)" }}>{t("loading")}</div>}
+      {bookings?.length === 0 && <EmptyState title={t("noBookingsYet")} hint={t("pickCategoryHint")} />}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "4px 20px 24px" }}>
         {bookings?.map((b) => (
@@ -49,19 +49,19 @@ export function MyBookingsPage() {
 
             {b.priceQuote && (
               <p style={{ margin: "8px 0 0", fontSize: 13, fontWeight: 700, color: "var(--accent)" }}>
-                {b.priceQuote} ብር
+                {b.priceQuote} {t("birr")}
               </p>
             )}
 
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               {b.status === "pending" && (
                 <Button variant="danger" onClick={() => cancel(b.id)}>
-                  ሰርዝ
+                  {t("cancel")}
                 </Button>
               )}
               {["accepted", "in_progress"].includes(b.status) && (
                 <Button variant="secondary" onClick={() => navigate(`/chat/${b.id}`)}>
-                  💬 ውይይት
+                  {t("chat")}
                 </Button>
               )}
             </div>

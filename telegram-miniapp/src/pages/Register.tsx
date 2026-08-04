@@ -2,13 +2,16 @@ import { useState, useEffect, FormEvent, ReactNode } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { Button } from "../components/ui";
+import { LanguageToggle } from "../components/LanguageToggle";
 import { BrandMark } from "../components/BrandMark";
 import { Field } from "./Login";
+import { useT } from "../lib/i18n";
 import * as api from "../lib/api";
 
 export function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const t = useT();
 
   const [role, setRole] = useState<"customer" | "provider">("customer");
   const [fullName, setFullName] = useState("");
@@ -36,7 +39,7 @@ export function RegisterPage() {
     e.preventDefault();
     setError(null);
     if (role === "provider" && categoryIds.length === 0) {
-      setError("እባክዎ ቢያንስ አንድ አገልግሎት ምድብ ይምረጡ");
+      setError(t("selectAtLeastOne"));
       return;
     }
     setLoading(true);
@@ -57,7 +60,7 @@ export function RegisterPage() {
       });
       navigate("/");
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : "ምዝገባ አልተሳካም");
+      setError(err instanceof api.ApiError ? err.message : t("registrationFailed"));
     } finally {
       setLoading(false);
     }
@@ -65,31 +68,35 @@ export function RegisterPage() {
 
   return (
     <div style={{ padding: "40px 24px 32px", maxWidth: 420, margin: "0 auto" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        <LanguageToggle />
+      </div>
+
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 24 }}>
-        <BrandMark size={40} />
-        <h1 style={{ fontSize: 20, fontWeight: 700, margin: "10px 0 0" }}>አዲስ መለያ ይክፈቱ</h1>
+        <BrandMark size={48} />
+        <h1 style={{ fontSize: 20, fontWeight: 700, margin: "10px 0 0" }}>{t("createAccountTitle")}</h1>
       </div>
 
       <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         <div style={{ display: "flex", gap: 8 }}>
           <RoleButton active={role === "customer"} onClick={() => setRole("customer")}>
-            👤 ደንበኛ
+            {t("roleCustomer")}
           </RoleButton>
           <RoleButton active={role === "provider"} onClick={() => setRole("provider")}>
-            🛠 አገልግሎት ሰጪ
+            {t("roleProvider")}
           </RoleButton>
         </div>
 
-        <Field label="ሙሉ ስም" value={fullName} onChange={setFullName} />
-        <Field label="ስልክ ቁጥር" value={phone} onChange={setPhone} placeholder="+251911223344" />
-        <Field label="የይለፍ ቃል" value={password} onChange={setPassword} type="password" />
-        <Field label="ከተማ" value={city} onChange={setCity} placeholder="አዲስ አበባ" />
+        <Field label={t("fullName")} value={fullName} onChange={setFullName} />
+        <Field label={t("phone")} value={phone} onChange={setPhone} placeholder="+251911223344" />
+        <Field label={t("password")} value={password} onChange={setPassword} type="password" />
+        <Field label={t("city")} value={city} onChange={setCity} placeholder="አዲስ አበባ" />
 
         {role === "provider" && (
           <>
             <div>
               <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600 }}>
-                የሚሰጡት አገልግሎት
+                {t("servicesProvided")}
               </span>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
                 {categories.map((c) => (
@@ -113,17 +120,12 @@ export function RegisterPage() {
               </div>
             </div>
             <Field
-              label="የስራ ቦታዎች (በኮማ ይለያዩ)"
+              label={t("workAreasCsv")}
               value={workAreas}
               onChange={setWorkAreas}
               placeholder="ቦሌ, ፒያሳ, ካዛንቺስ"
             />
-            <Field
-              label="የስራ ልምድ (ዓመት)"
-              value={yearsExperience}
-              onChange={setYearsExperience}
-              type="number"
-            />
+            <Field label={t("yearsExperience")} value={yearsExperience} onChange={setYearsExperience} type="number" />
           </>
         )}
 
@@ -131,13 +133,13 @@ export function RegisterPage() {
 
         <div style={{ marginTop: 4 }}>
           <Button type="submit" full disabled={loading}>
-            {loading ? "..." : "ተመዝገብ"}
+            {loading ? "..." : t("register")}
           </Button>
         </div>
       </form>
 
       <p style={{ textAlign: "center", marginTop: 20, fontSize: 14, color: "var(--text-muted)" }}>
-        መለያ አለዎት? <Link to="/login">ግባ</Link>
+        {t("haveAccount")} <Link to="/login">{t("login")}</Link>
       </p>
     </div>
   );

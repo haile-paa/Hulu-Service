@@ -1,19 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { useT } from "../lib/i18n";
 
 const icon = {
-  home: (
-    <path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-7.5Z" />
-  ),
-  bookings: (
-    <path d="M6 3h12a1 1 0 0 1 1 1v16l-7-3-7 3V4a1 1 0 0 1 1-1Z" />
-  ),
-  chat: (
-    <path d="M4 4h16v12H8l-4 4V4Z" />
-  ),
-  profile: (
-    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0v1H5v-1Z" />
-  ),
+  home: <path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-7.5Z" />,
+  bookings: <path d="M6 3h12a1 1 0 0 1 1 1v16l-7-3-7 3V4a1 1 0 0 1 1-1Z" />,
+  profile: <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0v1H5v-1Z" />,
 };
 
 function Icon({ name }: { name: keyof typeof icon }) {
@@ -26,14 +18,15 @@ function Icon({ name }: { name: keyof typeof icon }) {
 
 export function BottomNav() {
   const { user } = useAuth();
+  const t = useT();
   const items: { to: string; label: string; icon: keyof typeof icon }[] = [
-    { to: "/", label: "ቤት", icon: "home" },
+    { to: "/", label: t("navHome"), icon: "home" },
     {
       to: user?.role === "provider" ? "/provider" : "/bookings",
-      label: user?.role === "provider" ? "ስራዎች" : "ማስያዣዎች",
+      label: user?.role === "provider" ? t("navJobs") : t("navBookings"),
       icon: "bookings",
     },
-    { to: "/profile", label: "መገለጫ", icon: "profile" },
+    { to: "/profile", label: t("navProfile"), icon: "profile" },
   ];
 
   return (

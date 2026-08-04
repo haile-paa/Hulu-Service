@@ -1,6 +1,8 @@
 import { ReactNode, CSSProperties } from "react";
 import { BrandMark } from "./BrandMark";
+import { LanguageToggle } from "./LanguageToggle";
 import { BookingStatus } from "../lib/api";
+import { useT, DictKey } from "../lib/i18n";
 
 export function Button({
   children,
@@ -18,7 +20,10 @@ export function Button({
   full?: boolean;
 }) {
   const styles: Record<string, CSSProperties> = {
-    primary: { background: "var(--accent)", color: "var(--accent-ink)" },
+    primary: {
+      background: "linear-gradient(135deg, var(--accent-2), var(--accent))",
+      color: "var(--accent-ink)",
+    },
     secondary: { background: "var(--bg-elevated-2)", color: "var(--text)" },
     danger: { background: "var(--danger-soft)", color: "var(--danger)" },
     ghost: { background: "transparent", color: "var(--text-muted)" },
@@ -34,7 +39,7 @@ export function Button({
         borderRadius: "var(--radius-sm)",
         padding: "13px 18px",
         fontSize: 15,
-        fontWeight: 600,
+        fontWeight: 700,
         width: full ? "100%" : undefined,
         opacity: disabled ? 0.5 : 1,
         transition: "transform 0.08s ease",
@@ -54,9 +59,11 @@ export function Card({ children, onClick }: { children: ReactNode; onClick?: () 
       style={{
         background: "var(--bg-elevated)",
         border: "1px solid var(--border)",
+        borderTop: "1px solid var(--card-highlight)",
         borderRadius: "var(--radius-md)",
         padding: 16,
         cursor: onClick ? "pointer" : undefined,
+        boxShadow: "0 1px 0 var(--card-highlight) inset",
       }}
     >
       {children}
@@ -64,25 +71,26 @@ export function Card({ children, onClick }: { children: ReactNode; onClick?: () 
   );
 }
 
-const STATUS_LABEL: Record<BookingStatus, string> = {
-  pending: "በመጠባበቅ ላይ",
-  accepted: "ተቀባይነት አግኝቷል",
-  rejected: "ውድቅ ተደርጓል",
-  in_progress: "በሂደት ላይ",
-  completed: "ተጠናቅቋል",
-  cancelled: "ተሰርዟል",
+const STATUS_KEY: Record<BookingStatus, DictKey> = {
+  pending: "statusPending",
+  accepted: "statusAccepted",
+  rejected: "statusRejected",
+  in_progress: "statusInProgress",
+  completed: "statusCompleted",
+  cancelled: "statusCancelled",
 };
 
 const STATUS_COLOR: Record<BookingStatus, string> = {
   pending: "var(--accent)",
-  accepted: "var(--success)",
-  in_progress: "var(--success)",
+  accepted: "var(--teal)",
+  in_progress: "var(--teal)",
   completed: "var(--text-muted)",
   rejected: "var(--danger)",
   cancelled: "var(--danger)",
 };
 
 export function StatusBadge({ status }: { status: BookingStatus }) {
+  const t = useT();
   const color = STATUS_COLOR[status];
   return (
     <span
@@ -91,15 +99,16 @@ export function StatusBadge({ status }: { status: BookingStatus }) {
         alignItems: "center",
         gap: 6,
         fontSize: 12,
-        fontWeight: 600,
+        fontWeight: 700,
         color,
         background: color + "22",
         padding: "4px 10px",
         borderRadius: 999,
+        whiteSpace: "nowrap",
       }}
     >
       <span style={{ width: 6, height: 6, borderRadius: 999, background: color }} />
-      {STATUS_LABEL[status]}
+      {t(STATUS_KEY[status])}
     </span>
   );
 }
@@ -122,7 +131,10 @@ export function TopBar({ title, right }: { title: string; right?: ReactNode }) {
         <BrandMark size={22} />
         <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{title}</h1>
       </div>
-      {right}
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {right}
+        <LanguageToggle />
+      </div>
     </div>
   );
 }

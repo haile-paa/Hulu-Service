@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import * as api from "../lib/api";
 import { TopBar, Card, EmptyState } from "../components/ui";
+import { useT } from "../lib/i18n";
 
 export function ProvidersPage() {
   const { categoryId = "" } = useParams();
@@ -9,6 +10,7 @@ export function ProvidersPage() {
   const categoryName = (location.state as { categoryName?: string } | null)?.categoryName;
   const navigate = useNavigate();
   const [providers, setProviders] = useState<api.Provider[] | null>(null);
+  const t = useT();
 
   useEffect(() => {
     api.listProviders({ categoryId }).then((r) => setProviders(r.providers));
@@ -16,14 +18,10 @@ export function ProvidersPage() {
 
   return (
     <div>
-      <TopBar title={categoryName || "አገልግሎት ሰጪዎች"} />
+      <TopBar title={categoryName || t("providersFor")} />
 
-      {providers === null && (
-        <div style={{ padding: 20, color: "var(--text-muted)" }}>በመጫን ላይ...</div>
-      )}
-      {providers?.length === 0 && (
-        <EmptyState title="አገልግሎት ሰጪ አልተገኘም" hint="ትንሽ ቆይተው እንደገና ይሞክሩ" />
-      )}
+      {providers === null && <div style={{ padding: 20, color: "var(--text-muted)" }}>{t("loading")}</div>}
+      {providers?.length === 0 && <EmptyState title={t("noProvidersFound")} hint={t("tryAgainLater")} />}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "4px 20px 24px" }}>
         {providers?.map((p) => (
@@ -36,7 +34,7 @@ export function ProvidersPage() {
                       width: 7,
                       height: 7,
                       borderRadius: 999,
-                      background: p.isAvailable ? "var(--success)" : "var(--text-muted)",
+                      background: p.isAvailable ? "var(--teal)" : "var(--text-muted)",
                     }}
                   />
                   <span style={{ fontWeight: 700, fontSize: 15 }}>{p.fullName}</span>

@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import * as api from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { TopBar } from "../components/ui";
+import { useT } from "../lib/i18n";
 
 const POLL_MS = 4000;
 
 export function ChatPage() {
   const { bookingId = "" } = useParams();
   const { token, user } = useAuth();
+  const t = useT();
   const [messages, setMessages] = useState<api.Message[]>([]);
   const [text, setText] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -49,7 +51,7 @@ export function ChatPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <TopBar title="ውይይት" />
+      <TopBar title={t("chatTitle")} />
 
       <div style={{ flex: 1, overflowY: "auto", padding: "8px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
         {messages.map((m) => {
@@ -60,7 +62,9 @@ export function ChatPage() {
               style={{
                 alignSelf: mine ? "flex-end" : "flex-start",
                 maxWidth: "78%",
-                background: mine ? "var(--accent)" : "var(--bg-elevated)",
+                background: mine
+                  ? "linear-gradient(135deg, var(--accent-2), var(--accent))"
+                  : "var(--bg-elevated)",
                 color: mine ? "var(--accent-ink)" : "var(--text)",
                 borderRadius: 14,
                 padding: "9px 13px",
@@ -87,7 +91,7 @@ export function ChatPage() {
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="መልዕክት ይጻፉ..."
+          placeholder={t("typeMessage")}
           style={{
             flex: 1,
             background: "var(--bg-elevated-2)",
@@ -101,7 +105,7 @@ export function ChatPage() {
         <button
           type="submit"
           style={{
-            background: "var(--accent)",
+            background: "linear-gradient(135deg, var(--accent-2), var(--accent))",
             color: "var(--accent-ink)",
             border: "none",
             borderRadius: 999,
