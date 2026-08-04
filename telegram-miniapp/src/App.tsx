@@ -16,17 +16,29 @@ import { ProfilePage } from "./pages/Profile";
 function RequireAuth({ children }: { children: ReactNode }) {
   const { token } = useAuth();
   const location = useLocation();
-  if (!token) return <Navigate to="/login" replace state={{ from: location }} />;
+  if (!token)
+    return <Navigate to='/login' replace state={{ from: location }} />;
   return <>{children}</>;
 }
 
 function Layout({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       <div style={{ flex: 1 }}>{children}</div>
       <BottomNav />
     </div>
   );
+}
+
+// The root screen differs by role: customers land on the category browser,
+// providers land on their job dashboard. Previously "/" always rendered
+// HomePage regardless of role, which is why providers saw the customer
+// screen after login.
+function RoleHome() {
+  const { user } = useAuth();
+  return user?.role === "provider" ? <ProviderDashboardPage /> : <HomePage />;
 }
 
 export default function App() {
@@ -36,21 +48,21 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/register' element={<RegisterPage />} />
 
       <Route
-        path="/"
+        path='/'
         element={
           <RequireAuth>
             <Layout>
-              <HomePage />
+              <RoleHome />
             </Layout>
           </RequireAuth>
         }
       />
       <Route
-        path="/providers/:categoryId"
+        path='/providers/:categoryId'
         element={
           <RequireAuth>
             <Layout>
@@ -60,7 +72,7 @@ export default function App() {
         }
       />
       <Route
-        path="/book/:providerId"
+        path='/book/:providerId'
         element={
           <RequireAuth>
             <Layout>
@@ -70,7 +82,7 @@ export default function App() {
         }
       />
       <Route
-        path="/bookings"
+        path='/bookings'
         element={
           <RequireAuth>
             <Layout>
@@ -80,17 +92,7 @@ export default function App() {
         }
       />
       <Route
-        path="/provider"
-        element={
-          <RequireAuth>
-            <Layout>
-              <ProviderDashboardPage />
-            </Layout>
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/chat/:bookingId"
+        path='/chat/:bookingId'
         element={
           <RequireAuth>
             <ChatPage />
@@ -98,7 +100,7 @@ export default function App() {
         }
       />
       <Route
-        path="/profile"
+        path='/profile'
         element={
           <RequireAuth>
             <Layout>
@@ -108,7 +110,7 @@ export default function App() {
         }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
   );
 }

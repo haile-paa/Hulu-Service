@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 
 export type Lang = "am" | "en";
 
@@ -26,9 +32,16 @@ const DICT = {
   fullName: { am: "ሙሉ ስም", en: "Full name" },
   city: { am: "ከተማ", en: "City" },
   servicesProvided: { am: "የሚሰጡት አገልግሎት", en: "Services you provide" },
-  workAreasCsv: { am: "የስራ ቦታዎች (በኮማ ይለያዩ)", en: "Work areas (comma separated)" },
-  yearsExperience: { am: "የስራ ልምድ (ዓመት)", en: "Years of experience" },
-  selectAtLeastOne: { am: "እባክዎ ቢያንስ አንድ አገልግሎት ምድብ ይምረጡ", en: "Please select at least one service" },
+  workAreasLabel: { am: "የስራ ቦታዎች", en: "Work areas" },
+  selectWorkArea: {
+    am: "እባክዎ ቢያንስ አንድ የስራ ቦታ ይምረጡ",
+    en: "Please select at least one work area",
+  },
+  yearsExperience: { am: "የስራ ልምድ", en: "Years of experience" },
+  selectAtLeastOne: {
+    am: "እባክዎ ቢያንስ አንድ አገልግሎት ምድብ ይምረጡ",
+    en: "Please select at least one service",
+  },
   register: { am: "ተመዝገብ", en: "Register" },
   registrationFailed: { am: "ምዝገባ አልተሳካም", en: "Registration failed" },
   loginFailed: { am: "መግባት አልተሳካም", en: "Login failed" },
@@ -93,7 +106,9 @@ const DICT = {
 
 export type DictKey = keyof typeof DICT;
 
-const LangContext = createContext<{ lang: Lang; toggle: () => void } | null>(null);
+const LangContext = createContext<{ lang: Lang; toggle: () => void } | null>(
+  null,
+);
 
 const STORAGE_KEY = "hulu-service-lang";
 
@@ -113,7 +128,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  return <LangContext.Provider value={{ lang, toggle }}>{children}</LangContext.Provider>;
+  return (
+    <LangContext.Provider value={{ lang, toggle }}>
+      {children}
+    </LangContext.Provider>
+  );
 }
 
 export function useLang() {

@@ -70,7 +70,7 @@ export function getTelegramUser() {
  * standard Mini App pattern — the arrow lives in Telegram's own header
  * chrome, not something we draw ourselves.
  */
-const ROOT_PATHS = ["/", "/bookings", "/provider", "/profile", "/login", "/register"];
+const ROOT_PATHS = ["/", "/bookings", "/profile", "/login", "/register"];
 
 export function useTelegramBackButton() {
   const location = useLocation();
