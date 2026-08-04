@@ -6,7 +6,6 @@ import {
   HardHat,
   Tags,
   LogOut,
-  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
@@ -25,8 +24,12 @@ export default function Sidebar() {
   return (
     <aside className='glass-panel fixed inset-y-0 left-0 z-20 flex w-64 flex-col rounded-r-3xl border-l-0 p-5'>
       <div className='mb-8 flex items-center gap-2.5 px-1'>
-        <div className='animate-glow flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 shadow-lg shadow-violet-500/30'>
-          <Sparkles size={18} className='text-white' />
+        <div className='animate-glow flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl shadow-lg shadow-violet-500/30'>
+          <img
+            src='/logo.png'
+            alt='Hulu Service'
+            className='h-full w-full object-cover'
+          />
         </div>
         <div>
           <p className='text-base-100 text-sm leading-tight font-semibold'>
@@ -78,9 +81,7 @@ export default function Sidebar() {
             <p className='text-base-100 truncate text-xs font-medium'>
               {user?.fullName || "Admin"}
             </p>
-            <p className='text-base-400 truncate text-[11px]'>
-              {user?.phone}
-            </p>
+            <p className='text-base-400 truncate text-[11px]'>{user?.phone}</p>
           </div>
         </div>
         <button

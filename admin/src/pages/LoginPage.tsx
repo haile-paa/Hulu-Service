@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Lock, Phone, Sparkles, LoaderCircle } from "lucide-react";
+import { Lock, Phone, LoaderCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import Scene3D from "@/components/Scene3D";
 
@@ -46,8 +46,12 @@ export default function LoginPage() {
         className='glass-panel w-full max-w-sm rounded-3xl p-8 shadow-2xl'
       >
         <div className='mb-7 flex flex-col items-center text-center'>
-          <div className='animate-float mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 shadow-lg shadow-violet-500/40'>
-            <Sparkles size={26} className='text-white' />
+          <div className='animate-float mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl shadow-lg shadow-violet-500/40'>
+            <img
+              src='/logo.png'
+              alt='Hulu Service'
+              className='h-full w-full object-cover'
+            />
           </div>
           <h1 className='text-base-100 text-xl font-semibold'>
             Hulu Service Admin
