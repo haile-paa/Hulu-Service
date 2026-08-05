@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import Dropdown from "../../components/Dropdown";
 import { api } from "../../api/client";
 import { formatCategoryPrice, PriceType } from "../../utils/pricing";
+import { saveSession } from "../../utils/session";
 
 type Role = "customer" | "provider";
 
@@ -115,8 +115,7 @@ export default function RegisterScreen({ navigation }: any) {
             : undefined,
       });
       const { token, user } = res.data;
-      await AsyncStorage.setItem("@hulu_token", token);
-      await AsyncStorage.setItem("@hulu_user", JSON.stringify(user));
+      await saveSession(token, user);
       navigation.replace(
         role === "provider" ? "ProviderDashboard" : "CustomerHome",
       );
@@ -162,6 +161,9 @@ export default function RegisterScreen({ navigation }: any) {
                   fontWeight: "600",
                   fontSize: 15,
                 }}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
               >
                 {t("auth.customer")}
               </Text>
@@ -187,6 +189,9 @@ export default function RegisterScreen({ navigation }: any) {
                   fontWeight: "600",
                   fontSize: 15,
                 }}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
               >
                 {t("auth.provider")}
               </Text>
@@ -446,6 +451,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderRadius: 14,
     paddingVertical: 16,
+    paddingHorizontal: 8,
     alignItems: "center",
   },
   input: {

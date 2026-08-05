@@ -12,6 +12,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import SettingsRow from "../../components/SettingsRow";
+import { clearSession } from "../../utils/session";
 
 interface Me {
   fullName: string;
@@ -34,7 +35,7 @@ export default function ProfileScreen({ navigation }: any) {
   }, []);
 
   const logout = async () => {
-    await AsyncStorage.multiRemove(["@hulu_token", "@hulu_user"]);
+    await clearSession();
     navigation.navigate("Login");
   };
 

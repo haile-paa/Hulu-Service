@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useColorScheme } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = "light" | "dark";
 
 interface ThemeColors {
   background: string;
@@ -14,11 +14,11 @@ interface ThemeColors {
   textFaint: string;
   border: string;
   borderStrong: string;
-  // Amber — the provider / "availability" accent
+  // Orange — the provider / "availability" accent
   accent: string;
   onAccent: string;
   accentDim: string;
-  // Magenta→violet — the customer / discovery accent
+  // Teal — the customer / discovery accent
   accentSecondary: string;
   accentTertiary: string;
   onAccentSecondary: string;
@@ -27,46 +27,52 @@ interface ThemeColors {
   danger: string;
 }
 
+// Palette sampled directly from assets/icon.png (the Hulu Service mark):
+// teal gradient background (#0E9387 → #0A2A42) with an orange checkmark
+// (#F7941E). Every accent below is built from those three colors so the
+// whole app reads as one brand with the logo.
 const lightColors: ThemeColors = {
-  background: '#F6F5FA',
-  surface: '#FFFFFF',
-  surfaceRaised: '#FFFFFF',
-  card: '#FFFFFF',
-  text: '#17171C',
-  textSecondary: '#6B6B78',
-  textFaint: '#A2A2AE',
-  border: '#E7E5EE',
-  borderStrong: '#D6D3E2',
-  accent: '#C99500',
-  onAccent: '#17171C',
-  accentDim: '#F3E4B8',
-  accentSecondary: '#C81B7D',
-  accentTertiary: '#6B21D8',
-  onAccentSecondary: '#FFFFFF',
-  success: '#1F9D63',
-  warning: '#B9790A',
-  danger: '#D13A4A',
+  background: "#F4F9F8",
+  surface: "#FFFFFF",
+  surfaceRaised: "#FFFFFF",
+  card: "#FFFFFF",
+  text: "#0F2624",
+  textSecondary: "#5C7472",
+  textFaint: "#9BB2AF",
+  border: "#DCEBE9",
+  borderStrong: "#C2D9D6",
+  // Orange — the provider / "availability" accent (from the logo checkmark)
+  accent: "#F7941E",
+  onAccent: "#12302D",
+  accentDim: "#FBE0BB",
+  // Teal — the customer / discovery accent (from the logo background)
+  accentSecondary: "#0E9387",
+  accentTertiary: "#0A3D4A",
+  onAccentSecondary: "#FFFFFF",
+  success: "#1F9D63",
+  warning: "#C97F0A",
+  danger: "#D13A4A",
 };
 
 const darkColors: ThemeColors = {
-  background: '#0A0A0E',
-  surface: '#15151C',
-  surfaceRaised: '#1C1C25',
-  card: '#1C1C25',
-  text: '#F4F4F7',
-  textSecondary: '#8D8D9A',
-  textFaint: '#5F5F6C',
-  border: 'rgba(255,255,255,0.08)',
-  borderStrong: 'rgba(255,255,255,0.14)',
-  accent: '#F4C430',
-  onAccent: '#0A0A0E',
-  accentDim: 'rgba(244,196,48,0.14)',
-  accentSecondary: '#E21F8F',
-  accentTertiary: '#7B2FF7',
-  onAccentSecondary: '#FFFFFF',
-  success: '#35D68A',
-  warning: '#F2A93A',
-  danger: '#FF5C6C',
+  background: "#081C20",
+  surface: "#0F2A2E",
+  surfaceRaised: "#153338",
+  card: "#153338",
+  text: "#EAF6F4",
+  textSecondary: "#8FADA9",
+  textFaint: "#5C7875",
+  border: "rgba(255,255,255,0.08)",
+  borderStrong: "rgba(255,255,255,0.14)",
+  accent: "#FFA640",
+  onAccent: "#0D211F",
+  accentDim: "rgba(255,166,64,0.16)",
+  accentSecondary: "#2DBFAF",
+  accentTertiary: "#12707C",
+  onAccentSecondary: "#052220",
+  success: "#35D68A",
+  warning: "#F5C242",
+  danger: "#FF5C6C",
 };
 
 interface ThemeContextValue {
@@ -78,15 +84,17 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-const STORAGE_KEY = '@hulu_theme_mode';
+const STORAGE_KEY = "@hulu_theme_mode";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme();
-  const [mode, setMode] = useState<ThemeMode>(systemScheme === 'dark' ? 'dark' : 'light');
+  const [mode, setMode] = useState<ThemeMode>(
+    systemScheme === "dark" ? "dark" : "light",
+  );
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY).then((saved) => {
-      if (saved === 'light' || saved === 'dark') {
+      if (saved === "light" || saved === "dark") {
         setMode(saved);
       }
     });
@@ -97,9 +105,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     AsyncStorage.setItem(STORAGE_KEY, next);
   };
 
-  const toggleTheme = () => setTheme(mode === 'light' ? 'dark' : 'light');
+  const toggleTheme = () => setTheme(mode === "light" ? "dark" : "light");
 
-  const colors = mode === 'light' ? lightColors : darkColors;
+  const colors = mode === "light" ? lightColors : darkColors;
 
   return (
     <ThemeContext.Provider value={{ mode, colors, toggleTheme, setTheme }}>
@@ -110,6 +118,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme() {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
   return ctx;
 }

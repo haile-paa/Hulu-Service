@@ -1,34 +1,27 @@
-import React from 'react';
-import { Text, StyleSheet, ViewStyle } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useTheme } from '../contexts/ThemeContext';
+import React from "react";
+import { Image, StyleSheet, ViewStyle } from "react-native";
 
 interface BrandMarkProps {
   size?: number;
   style?: ViewStyle;
 }
 
-// The "H" mark — amber → magenta → violet, the same gradient used across
-// every accent moment in the app (call buttons, active tabs, availability glow).
+// The Hulu Service logo mark — the location-pin + checkmark icon from
+// assets/icon.png, used everywhere the brand appears (top bar, auth
+// screens, etc). Rounded to match the icon's own rounded-square shape.
 export default function BrandMark({ size = 30, style }: BrandMarkProps) {
-  const { colors } = useTheme();
   return (
-    <LinearGradient
-      colors={[colors.accent, colors.accentSecondary, colors.accentTertiary]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+    <Image
+      source={require("../assets/icon.png")}
       style={[
         styles.mark,
-        { width: size, height: size, borderRadius: size * 0.32 },
-        style,
+        { width: size, height: size, borderRadius: size * 0.22 },
       ]}
-    >
-      <Text style={[styles.letter, { fontSize: size * 0.46, color: colors.onAccent }]}>H</Text>
-    </LinearGradient>
+      resizeMode='cover'
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  mark: { alignItems: 'center', justifyContent: 'center' },
-  letter: { fontWeight: '700' },
+  mark: { overflow: "hidden" },
 });

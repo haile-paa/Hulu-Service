@@ -13,11 +13,11 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../contexts/ThemeContext";
 import BrandMark from "../../components/BrandMark";
 import TopBar from "../../components/TopBar";
 import { api } from "../../api/client";
+import { saveSession } from "../../utils/session";
 
 export default function LoginScreen({ navigation }: any) {
   const { t } = useTranslation();
@@ -34,8 +34,7 @@ export default function LoginScreen({ navigation }: any) {
     try {
       const res = await api.post("/auth/login", { phone, password });
       const { token, user } = res.data;
-      await AsyncStorage.setItem("@hulu_token", token);
-      await AsyncStorage.setItem("@hulu_user", JSON.stringify(user));
+      await saveSession(token, user);
       navigation.replace(
         user.role === "provider" ? "ProviderDashboard" : "CustomerHome",
       );

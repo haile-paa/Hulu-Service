@@ -13,6 +13,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import TopBar from "../../components/TopBar";
 import SettingsRow from "../../components/SettingsRow";
+import { clearSession } from "../../utils/session";
 import { api } from "../../api/client";
 import { formatCategoryPrice, PriceType } from "../../utils/pricing";
 
@@ -57,7 +58,7 @@ export default function ProviderProfileScreen({ navigation }: any) {
   }, []);
 
   const logout = async () => {
-    await AsyncStorage.multiRemove(["@hulu_token", "@hulu_user"]);
+    await clearSession();
     navigation.navigate("Login");
   };
 

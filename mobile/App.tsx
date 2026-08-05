@@ -9,6 +9,7 @@ import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { initI18n } from "./locales/i18n";
 import i18n from "./locales/i18n";
+import { getValidSession } from "./utils/session";
 
 import LoginScreen from "./screens/auth/LoginScreen";
 import RegisterScreen from "./screens/auth/RegisterScreen";
@@ -19,7 +20,7 @@ import ChatRoomScreen from "./screens/shared/ChatRoomScreen";
 
 const Stack = createNativeStackNavigator();
 
-function RootNavigator() {
+function RootNavigator({ initialRouteName }: { initialRouteName: string }) {
   const { colors } = useTheme();
   return (
     <NavigationContainer
@@ -35,7 +36,10 @@ function RootNavigator() {
         },
       }}
     >
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={initialRouteName}
+      >
         <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='CustomerHome' component={CustomerNavigator} />
@@ -57,9 +61,27 @@ function RootNavigator() {
 
 export default function App() {
   const [ready, setReady] = useState(false);
+  const [initialRouteName, setInitialRouteName] = useState("Login");
 
   useEffect(() => {
-    initI18n().then(() => setReady(true));
+    async function bootstrap() {
+      await initI18n();
+
+      // Skip straight past Login if a session was saved within the last
+      // 48 hours; otherwise it's already been cleared and the user signs
+      // in again as normal.
+      const session = await getValidSession();
+      if (session) {
+        setInitialRouteName(
+          session.user.role === "provider"
+            ? "ProviderDashboard"
+            : "CustomerHome",
+        );
+      }
+
+      setReady(true);
+    }
+    bootstrap();
   }, []);
 
   if (!ready) {
@@ -79,7 +101,7 @@ export default function App() {
       <I18nextProvider i18n={i18n}>
         <ThemeProvider>
           <LanguageProvider>
-            <RootNavigator />
+            <RootNavigator initialRouteName={initialRouteName} />
           </LanguageProvider>
         </ThemeProvider>
       </I18nextProvider>
