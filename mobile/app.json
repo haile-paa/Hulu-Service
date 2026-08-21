@@ -5,18 +5,26 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": true,
       "infoPlistNSLocationWhenInUseUsageDescription": "ደንበኞች አካባቢዎን በማወቅ አቅራቢያ ያሉ ባለሙያዎችን እንዲያገኙ ያስፈልጋል።"
     },
     "android": {
+      "package": "com.huluservice.mobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A2A42"
       },
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,6 +45,12 @@
           "backgroundColor": "#0A2A42"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "844e0ec2-e628-4198-aeb6-9f9d02258605"
+      }
+    },
+    "owner": "haile_pa"
   }
 }

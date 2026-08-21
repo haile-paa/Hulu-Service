@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Ethiopic:wght@500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+
+body {
+  @apply bg-bg text-cream font-body antialiased;
+}
+
+.bg-glow { position: relative; }
+.bg-glow::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(700px 420px at 85% -8%, rgba(52,198,166,0.14), transparent 60%),
+    radial-gradient(600px 380px at 8% 10%, rgba(251,158,48,0.10), transparent 60%);
+}
+
+@layer components {
+  .wrap { @apply max-w-wrap mx-auto px-6 md:px-7 relative z-10; }
+
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full font-body font-semibold text-[15px] px-6 py-3.5 whitespace-nowrap select-none transition; }
+  .btn-primary { @apply bg-cta text-[#0a1c17] shadow-glow hover:brightness-110; }
+  .btn-ghost { @apply bg-[rgba(244,239,228,0.04)] border border-line2 text-cream hover:bg-[rgba(244,239,228,0.08)]; }
+  .btn-sm { @apply px-[18px] py-2.5 text-[13.5px]; }
+
+  .pill { @apply font-mono text-[11.5px] tracking-wide px-3 py-1.5 rounded-full border border-line2 text-muted; }
+
+  .stop { @apply relative inline-flex items-center gap-2.5 font-mono text-[12.5px] tracking-[0.08em] uppercase text-muted mb-4 pr-[68px]; }
+  .stop::after {
+    content: '';
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 56px; height: 1px;
+    background-image: repeating-linear-gradient(90deg, rgba(244,239,228,0.16) 0 6px, transparent 6px 11px);
+  }
+
+  .card { @apply bg-bg1 border border-line rounded-[18px]; }
+
+  .phone-frame { @apply w-[220px] rounded-[32px] border-[6px] border-[#06120f] bg-black overflow-hidden shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)]; }
+}
+
+::selection { background: rgba(251,158,48,0.3); color: #fff; }
+
+/* Marquee tracks: duplicated content scrolls seamlessly */
+.marquee-track { display: flex; width: max-content; }
