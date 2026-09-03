@@ -3,6 +3,10 @@
 Local services marketplace for Ethiopia — connects customers with verified providers
 (electricians, plumbers, satellite/DSTV installers, tutors, and more).
 
+## Blog website
+
+[hulu-service.vercel.app](https://hulu-service.vercel.app/)
+
 ## Media kit
 
 [Hulu Service — LinkedIn Carousel (PDF)](./docs/Hulu_Service_LinkedIn_Carousel.pdf)
@@ -10,6 +14,7 @@ Local services marketplace for Ethiopia — connects customers with verified pro
 ## What's built so far
 
 **Backend (Go + Gin + MongoDB)**
+
 - User model shared by customers and providers (role field), providers also carry `workAreas` (e.g. Bole, Piassa)
 - 15 Ethiopian service categories + 18 Addis Ababa work areas seeded/available (`/api/categories`, `/api/areas`)
 - JWT auth with role-based middleware (`RequireAuth`, `RequireRole`)
@@ -19,6 +24,7 @@ Local services marketplace for Ethiopia — connects customers with verified pro
 - Booking + Review models scaffolded, ready for handlers next — **no expiry/time limit** on accept or reject by design
 
 **Mobile (Expo/React Native + TypeScript)**
+
 - **Amharic-only** — all UI text, categories, and areas are in Amharic; light/dark toggle remains in the top bar
 - Register screen: customer/provider role picker, provider category picker, **provider work-area picker** (Bole, Piassa, Kazanchis, etc.)
 - Provider dashboard: **LinkedIn-style "open to work" banner** — tap to flip available ⇄ not available, syncs to backend instantly
