@@ -3,6 +3,10 @@
 Local services marketplace for Ethiopia — connects customers with verified providers
 (electricians, plumbers, satellite/DSTV installers, tutors, and more).
 
+## Media kit
+
+[Hulu Service — LinkedIn Carousel (PDF)](./docs/Hulu_Service_LinkedIn_Carousel.pdf)
+
 ## What's built so far
 
 **Backend (Go + Gin + MongoDB)**
